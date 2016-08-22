@@ -3,7 +3,7 @@ import os
 
 # Creates icons and Home screen slices for iOS
 # Currently sized for large Social burst images and the three other smaller images
-# images have to be in the same directory as this file and have teh following EXACT names:
+# images have to be in the same directory as this file and have the following EXACT names:
 
 appName = raw_input('Enter the app name:')
 iconImage =  "iTunesArtwork.png"

@@ -155,7 +155,7 @@ def create1242Width(image):
         img = img.resize((1242,334), Image.ANTIALIAS)
         img.save('%s%s' % (appNameDefaultPath, image))
 
-def create640Width(image):
+def createDefaultx2(image):
     imagePath = 'Artwork/Images/'
     if not os.path.exists(imagePath):
         os.makedirs(imagePath)
@@ -199,10 +199,10 @@ create1242Width(mediaLibraryImage)
 create1242Width(socialBurstImage)
 create1242Width(socialFeedImage)
 
-create640Width(insiderFeedImage)
-create640Width(mediaLibraryImage)
-create640Width(socialBurstImage)
-create640Width(socialFeedImage)
+createDefaultx2(insiderFeedImage)
+createDefaultx2(mediaLibraryImage)
+createDefaultx2(socialBurstImage)
+createDefaultx2(socialFeedImage)
 
 
 

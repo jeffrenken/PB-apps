@@ -4,7 +4,7 @@ __author__ = 'Jeff'
 # Logs into Pointburst backend, clicks Review Insider Feed, clicks Logout
 # If this doesn't work, it sends an email and Slack message
 # create a plist file for continuous running/monitoring
-
+# Switch to PhantomJS option below for headless
 
 from selenium import webdriver
 import time, smtplib

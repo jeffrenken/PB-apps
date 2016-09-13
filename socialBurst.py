@@ -5,20 +5,29 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
-import unittest, time, re
+import unittest, time, re, smtplib
 
-# This is a test app only. User/password aren't obfuscated
-# Logs in to Pointburst as
+from email.header    import Header
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+from slacker import Slacker
+
+
+# This is an internal script for test sending Socialbursts. User/password aren't obfuscated
+# Logs in to Pointburst as whomever you want
 # Sends a burst with the first image from Instagram to whichever group you specify
+
 # Add login info, a message, and probably a test group
 # Can be ran continuously by changing timesToRun - Add a +1 to burstName somewhere so you can differentiate between bursts
+# run headless by changing the webdriver to PhantomJS
 
 
 login = ""
 password = ""
 burstName = 1              # For a written name, use quotes: "This is the burst name."
 burstMessage = ""
-group = ""            # Be careful with this one. Group name has to be entered exactly, and leaving it blank will send a burst to all.
+group = ""                 # Be careful with this one. Group name has to be entered exactly, and leaving it blank will send a burst to all.
                            # It should work to enter only the first few letters, but I don't guarantee it.
 postToTwitter = "yes"      # use "yes" or "no"
 postToFacebook = "yes"
@@ -28,6 +37,7 @@ timesToRun = 1             # This should be obvious.
 
 class Burst(unittest.TestCase):
     def setUp(self):
+        #self.driver = webdriver.PhantomJS()
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
         self.base_url = "https://go.pointburst.com/index.php?displayLogin=yes"
@@ -170,6 +180,43 @@ class Burst(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
+
+def Email():
+    # add to send status to email
+    emailMessage = ""
+    sender = " SENDERS EMAIL "
+    recipients = ['RECIPIENTS EMAIL ', '', '']
+    msg = MIMEMultipart()
+    msg['From'] = sender
+    msg['To'] = ", ".join(recipients)
+    msg['Subject'] = "%s: SocialBurst test." % (login)
+
+    body = "%s: %s" % (login, emailMessage)
+    msg.attach(MIMEText(body, 'plain'))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender, " ENTER YOUR PASSWORD ")
+    text = msg.as_string()
+    server.sendmail(sender, recipients, msg.as_string())
+    server.quit()
+
+
+def writeStatus():
+    # add to save a log to a text file
+    if success == 1:
+        with open("/Users/graphicdesigner-1/Google Drive/output.txt", "a") as text_file:
+            text_file.write(login + " " + status + "\n")
+
+    if success == 0:
+        with open("/Users/graphicdesigner-1/Google Drive/output.txt", "a") as text_file:
+            text_file.write(login + " " + status + "\n")
+
+def sendToSlack():
+    #add to post run status to Slack
+    slack = Slacker('   SLACK TOKEN    ')
+    slack.chat.post_message(' SLACK USER ','Login Failed',username='@ SLaCK USER')
+
 
 if __name__ == "__main__":
     unittest.main()

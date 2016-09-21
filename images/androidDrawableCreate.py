@@ -3,17 +3,19 @@ from PIL import Image
 import numpy as np
 
 # Finds the most common color in an image and replaces it with the values entered below
-# setup to use .png files but can change below, will change all files in this same directory
-# Can also enter a specific RGB value below to change
+# setup to use .png files but can change below, will change all files in ANDROID_drawable-xxhdpi/
+# Can also enter a specific RGB value below to change, but shouldn't have to for this purpose
 # Retains transparency
 # AndroidArt.zip will be in the same location as this file
 
 # ENTER THE NEW RGB VALUES HERE
 r2, g2, b2 = 44,78,35
+
+
 # Enter the file extension to change
 extension = 'png'
 # File path to save to, will create if doesn't exist yet
-savePath = '/Users/Jeff/Desktop/ColorReplacedImages/'
+#savePath = '/Users/Jeff/Desktop/ColorReplacedImages/'
 
 
 def most_frequent_colour(image):
@@ -65,3 +67,4 @@ for path in glob.glob("ANDROID_drawable-xxhdpi/*.%s" % extension):
     zipf = zipfile.ZipFile('AndroidArt.zip', 'w', zipfile.ZIP_DEFLATED)
     zipdir('ANDROID_drawable-xxhdpi/', zipf)
     zipf.close()
+print "AndroidArt.zip was created in " + os.getcwd()

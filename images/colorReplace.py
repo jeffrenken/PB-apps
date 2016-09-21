@@ -1,18 +1,19 @@
-import glob, os
+import glob, os, zipfile
 from PIL import Image
 import numpy as np
 
 # Finds the most common color in an image and replaces it with the values entered below
 # setup to use .png files but can change below, will change all files in this same directory
+# Can also enter a specific RGB value below to change
 # Retains transparency
-
+# AndroidArt.zip will be in the same location as this file
 
 # ENTER THE NEW RGB VALUES HERE
-r2, g2, b2 = 11,200,200
+r2, g2, b2 = 44,78,35
 # Enter the file extension to change
 extension = 'png'
 # File path to save to, will create if doesn't exist yet
-savePath = '/Users/Jeff/PycharmProjects/images/NewImages/'
+savePath = '/Users/Jeff/Desktop/ColorReplacedImages/'
 
 
 def most_frequent_colour(image):
@@ -30,12 +31,17 @@ def most_frequent_colour(image):
     most_frequent_pixel = ''.join(c for c in most_frequent_pixel if c not in '(){}<>')
     return most_frequent_pixel
 
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
 
-if not os.path.exists(savePath):
-    os.makedirs(savePath)
+#if not os.path.exists(savePath):
+#    os.makedirs(savePath)
 
 
-for path in glob.glob("*.%s" % extension):
+for path in glob.glob("ANDROID_drawable-xxhdpi/*.%s" % extension):
     im = Image.open(path)
     data = np.array(im)
     print "The most frequent color is: " + most_frequent_colour(im)
@@ -46,7 +52,7 @@ for path in glob.glob("*.%s" % extension):
     b1 = int(colorList[3].strip())
 
 
-# UNCOMMENT THIS TO ENTER YOUR OWN RGB VALUES
+# UNCOMMENT THIS TO ENTER YOUR OWN ORIGINAL RGB VALUES
     #r1, g1, b1 = 202, 156, 59 # Original values
 
 
@@ -55,5 +61,7 @@ for path in glob.glob("*.%s" % extension):
     data[:,:,:3][mask] = [r2, g2, b2]
 
     im = Image.fromarray(data)
-
-    im.save('%s%s' % (savePath, path))
+    im.save(path)
+    zipf = zipfile.ZipFile('AndroidArt.zip', 'w', zipfile.ZIP_DEFLATED)
+    zipdir('ANDROID_drawable-xxhdpi/', zipf)
+    zipf.close()

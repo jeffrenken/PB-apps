@@ -1,5 +1,4 @@
 __author__ = 'Jeff'
-
 #!/usr/bin/env python
 import os, shutil, time, glob
 import zipfile
@@ -8,19 +7,34 @@ import numpy as np
 import jira.client, requests
 from jira import JIRA
 
-appName = 'appName'
-iconImage =  "iTunesArtwork.png"
+"""
+This automates nearly everything. It creates all the iOS icons,
+                                  Changes the color of all the Android drawable images,
+                                  Replaces the color of the Landing Images(if you want),
+                                  Creates all the sizes of Landing Images,
+                                  Zips all the necessary files,
+                                  Creates all the standard Jira issues,
+                                  Assigns the right people to each issue,
+                                  Uploads the images to the prpoer Jira issues
+
+1. Change the appName and all the RGB colors
+2. Make sure all the images files are in this same folder with the proper names
+3. Update the JIRA info - Login, password, App Key. YOU HAVE TO CREATE THE PROJECT IN JIRA FIRST.
+"""
+
+appName = ' ENTER THE APP NAME '
+
+iconImage = "iTunesArtwork.png"
 iconPath = 'Appstore/'
 iconFileType = '.png'
 androidIconsPath = 'AndroidIcons/'
 androidIconsExt = 'png'
-r2, g2, b2 = 11,176,60
-androidSavePath = '/Users/Jeff/Desktop/ColorReplacedImages/'
 
 #New values for Android drawable-xxhdpi
 ar2, gr2, ab2 = 100, 200, 200
 
-# Enter the RGB values for each image
+# Enter the RGB values for each image (Do you want to change their colors? Change next line to 'yes')
+doYouWantToChangeLandingColors = "no"
 insiderFeedImage = "InsiderFeed.png"
 r2IF, g2IF, b2IF = 3,200,33
 mediaLibraryImage = "MediaLibrary.png"
@@ -34,10 +48,10 @@ r2SF, g2SF, b2SF = 3,3,200
 
 # Jira stuff
 # Update the projectKey to what you just created on their site
-projectKey = "TPO"
+projectKey = "ENTER THE JIRA PROJECT KEY "
 # If you change the login info here, you also have to change it in def uploadjiraAttach
-options = {'server': 'https://   [YOUR JIRA SITE]    .atlassian.net'}
-jira = JIRA(options, basic_auth=('[JIRA LOGIN}', '[JIRA PASSWORD]'))
+options = {'server': 'https://pointburst.atlassian.net'}
+#jira = JIRA(options, basic_auth=('YOUR LOGIN', 'YOUR PASSWORD'))
 issueType = "Story"
 
 
@@ -233,6 +247,35 @@ def create640WidthDefault(image):
         img = img.resize((640,145), Image.ANTIALIAS)
         img.save('%s%s' % (appNameDefaultPath, image))
 
+
+def createInsiderFeed():
+    create320Width(insiderFeedImage)
+    create640Width(insiderFeedImage)
+    create750Width(insiderFeedImage)
+    create1242Width(insiderFeedImage)
+    create640WidthDefault(insiderFeedImage)
+
+def createMediaLibrary():
+    create320Width(mediaLibraryImage)
+    create640Width(mediaLibraryImage)
+    create750Width(mediaLibraryImage)
+    create1242Width(mediaLibraryImage)
+    create640WidthDefault(mediaLibraryImage)
+
+def createSocialBurst():
+    create320Width(socialBurstImage)
+    create640Width(socialBurstImage)
+    create750Width(socialBurstImage)
+    create1242Width(socialBurstImage)
+    create640WidthDefault(socialBurstImage)
+
+def createSocialFeed():
+    create320Width(socialFeedImage)
+    create640Width(socialFeedImage)
+    create750Width(socialFeedImage)
+    create1242Width(socialFeedImage)
+    create640WidthDefault(socialFeedImage)
+
 def replaceColor(r2, g2, b2, image):
     im = Image.open(image)
     data = np.array(im)
@@ -274,9 +317,67 @@ def androidIcons(r2, g2, b2):
     zipf.close()
 
 def createJiraIssues():
-    issuesList = ["create google analytics ID", "do something else", 'Today is Friday']  # :'jeffreyrenken',
+    issuesList = ["create google analytics ID",  # :'jeffreyrenken',
+              "Add Google Analytics IDs", #: 'psrinivas',
+                "color values (iOS)", #: 'psrinivas',
+                "App authorization form (iOS and android)", #: 'mick.twomey',
+                "Android - Twitter  app in the app's own backend cluster", #: 'sitakanta',
+                "iOS - Twitter app in the app's own backend cluster", #: 'psrinivas',
+                "Android - FB app in the app's own backend cluster", #: 'sitakanta',
+                "iOS - FB app in the app's own backend cluster", #: 'psrinivas',
+                "Android - New landing page", #: 'sitakanta',
+                "iOS -New Landing page", #: 'psrinivas',
+                "Android - Email sign up required for registartion", #: 'sitakanta',
+                "iOS - Email sign up required for registration", #: 'psrinivas',
+                "Android - FB compliance included", #: 'sitakanta',
+                "iOS- FB compliance included", #: 'psrinivas',
+                "Android- Integration with Kaltura", #: 'sitakanta',
+                "iOS-Integration of Kaltura", #: 'psrinivas',
+                "Upload publisher credentials", #: 'mick.twomey',
+                "Upload iOS artwork", #: 'rogerrohatgi',
+                "Create P12 files", #: 'psrinivas',
+                "Android - Updates files on SVN for Apstrata and commit", #: 'yogi',
+                "create google playstore images", #: 'sitakanta',
+                "Create Apple App Store images", #: 'psrinivas',
+                "Upload android artwork", #: 'rogerrohatgi',
+                "Android - GP - Link Sender ID", #: 'sitakanta',
+                "Android - Add GCM to APIs and Auth in GDC", #: 'sitakanta',
+                "Android - Create project in Google Developer Console", #: 'sitakanta',
+                "iOS - Create certificates", #: 'psrinivas',
+                "iOS - Create Facebook suffix" #: 'mick.twomey',
+                ]
 
-    assigneeList = ['admin', 'admin', 'kenadams', ]
+
+    assigneeList = ['jeffreyrenken',
+                'psrinivas',
+                'psrinivas',
+                'mick.twomey',
+                'sitakanta',
+                'psrinivas',
+                'sitakanta',
+                'psrinivas',
+                'sitakanta',
+                'psrinivas',
+                'sitakanta',
+                'psrinivas',
+                'sitakanta',
+                'psrinivas',
+                'sitakanta',
+                'psrinivas',
+                'mick.twomey',
+                'rogerrohatgi',
+                'psrinivas',
+                'yogi',
+                'sitakanta',
+                'psrinivas',
+                'rogerrohatgi',
+                'sitakanta',
+                'sitakanta',
+                'sitakanta',
+                'psrinivas',
+                'mick.twomey']
+
+
 
     issue_dict = {}
     i = 0
@@ -294,14 +395,14 @@ def createJiraIssues():
         jira.create_issue(fields=issue_dict)
 
 def uploadjiraAttach(issue, attachment):
-    url = ('https://JIRA SITE.atlassian.net/rest/api/2/issue/%s/attachments' % issue)
+    url = ('https://pointburst.atlassian.net/rest/api/2/issue/%s/attachments' % issue)
     headers = {"X-Atlassian-Token": "nocheck"}
     # please uncomment to attach external file
     files = {'file': open('%s' % attachment, 'rb')}
     # upload file to issue
     # [USERNAME], i.e.: admin
     # [PASSWORD], i.e.: admin
-    r = requests.post(url, auth=('admin', '[JIRA PASSWORD'), files=files, headers=headers)
+    r = requests.post(url, auth=(' YOUR LOGIN ', 'YOUR PASSWORD '), files=files, headers=headers)
     #print(r.status_code)
     #print(r.text)
 
@@ -314,70 +415,45 @@ if __name__ == '__main__':
     zipdir('ANDROID_drawable-xxhdpi/', zipf)
     zipf.close()
 
-
     createIOSIcons(iconImage, iconPath, iconFileType)
     zipf = zipfile.ZipFile('ITunesIcons.zip', 'w', zipfile.ZIP_DEFLATED)
     zipdir(iconPath, zipf)
     zipf.close()
     deleteDirectory(iconPath)
 
-
     print "Creating Landing screen images"
-    replaceColor(r2IF, g2IF, b2IF, insiderFeedImage)
-    replaceColor(r2ML, g2ML, b2ML, mediaLibraryImage)
-    replaceColor(r2SB, g2SB, b2SB, socialBurstImage)
-    replaceColor(r2SF, g2SF, b2SF, socialFeedImage)
+    if doYouWantToChangeLandingColors == "yes":
+        print "Changing landing image colors"
+        replaceColor(r2IF, g2IF, b2IF, insiderFeedImage)
+        replaceColor(r2ML, g2ML, b2ML, mediaLibraryImage)
+        replaceColor(r2SB, g2SB, b2SB, socialBurstImage)
+        replaceColor(r2SF, g2SF, b2SF, socialFeedImage)
+    else:
+        print "Landing image color NOT changed"
 
-    create320Width(insiderFeedImage)
-    create320Width(mediaLibraryImage)
-    create320Width(socialBurstImage)
-    create320Width(socialFeedImage)
-
-    create640Width(insiderFeedImage)
-    create640Width(mediaLibraryImage)
-    create640Width(socialBurstImage)
-    create640Width(socialFeedImage)
-
-    create750Width(insiderFeedImage)
-    create750Width(mediaLibraryImage)
-    create750Width(socialBurstImage)
-    create750Width(socialFeedImage)
-
-    create1242Width(insiderFeedImage)
-    create1242Width(mediaLibraryImage)
-    create1242Width(socialBurstImage)
-    create1242Width(socialFeedImage)
-
-    create640WidthDefault(insiderFeedImage)
-    create640WidthDefault(mediaLibraryImage)
-    create640WidthDefault(socialBurstImage)
-    create640WidthDefault(socialFeedImage)
+    createInsiderFeed()
+    createMediaLibrary()
+    createSocialBurst()
+    createSocialFeed()
     zipf = zipfile.ZipFile('LandingArt.zip', 'w', zipfile.ZIP_DEFLATED)
     zipdir('Artwork/', zipf)
     zipf.close()
     deleteDirectory('Artwork/')
 
-
-    createJiraIssues()
+    #createJiraIssues()
     print "Creating Jira Issues"
     # Attach iOS Artwork KEY-18
     print "Uploading Artwork to Jira"
 
-    uploadjiraAttach('%s-12' % projectKey, 'LandingArt.zip')
-    uploadjiraAttach('%s-13' % projectKey, 'ITunesIcons.zip')
-    uploadjiraAttach('%s-14' % projectKey, 'AndroidArt.zip')
+# Add attachments to JIRA issues
+    #uploadjiraAttach('%s-18' % projectKey, 'LandingArt.zip')
+    #uploadjiraAttach('%s-18' % projectKey, 'ITunesIcons.zip')
+    #uploadjiraAttach('%s-23' % projectKey, 'AndroidArt.zip')
 
-
-
-    #os.remove('LandingArt.zip')
+# Delete the newly created art after uploading
+    os.remove('LandingArt.zip')
     os.remove('ITunesIcons.zip')
     os.remove('AndroidArt.zip')
+    print "Done"
 
 
-
-"""
-    #shutil.copy2('Python.zip', 'Python2.zip')
-    filename = 'Python.zip'
-    time.sleep(5)
-    deleteFile(filename)
-    """

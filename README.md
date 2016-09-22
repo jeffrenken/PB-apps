@@ -11,6 +11,7 @@ jiraNewAppTemplate: This creates all the standard issues and assigns them to the
 socialBurst: This never really got used, but it automates sending a social burst or can be sent to send multiple bursts in a row.
 
 <strong>Images</strong>
+
 androidDrawableCreate: Changes the color of all the Android images
 
 iosIcons: Creates all the sizes for an iOS icon
